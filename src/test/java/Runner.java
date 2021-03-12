@@ -1,39 +1,43 @@
+
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
+import pages.LandingPage;
+import pages.SignUpPage;
 
-import java.util.concurrent.TimeUnit;
+import static org.apache.logging.log4j.LogManager.getLogger;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
-public class Runner {
+public class Runner extends Hooks{
+
+    private static final Logger log = getLogger(Runner.class.getName());
 
     @Test
-    public void demoTest(){
-        WebDriver driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.navigate().to("https://www.wikipedia.org");
+    public void register(){
+        LandingPage landing = new LandingPage(driver);
 
+        log.info("Calling SignUp");
+        SignUpPage signUpPage = landing.signUpPage();
 
-        By searchBar = By.id("searchInput");
-        driver.findElement(searchBar).sendKeys("Endava");
+        log.info("Filling the SignUp Form");
+        signUpPage.signUpForm();
 
-        By suggestionsSearches = By.cssSelector(".suggestions-dropdown a");
+        By bannerText = signUpPage.getBannerText();
+        String texts = driver.findElement(bannerText).getAttribute("data-success-message");
 
-        //Implicit Waits - Telling the browser to wait
-        //If Element is there, then just go a head
-        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        log.info("Banner Text " + texts);
+        assertThat("Attribute contains 'We just sent you an email!'", texts,
+                equalTo("We just sent you an email! Please check your inbox and spam folder in a few minutes."));
 
-        //Explicit waits
-        //Telling to wait to a certain condition happens
-        WebDriverWait wait = new WebDriverWait(driver, 3);
-        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(suggestionsSearches, 1));
-
-        driver.findElements(suggestionsSearches).get(0).click();
-
-        driver.quit();
     }
 
+    @Test
+    public void logIn(){
+        LandingPage landing = new LandingPage(driver);
+        log.info("Calling login fancy box");
+
+        landing.login();
+
+    }
 }

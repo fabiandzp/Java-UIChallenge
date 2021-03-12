@@ -1,0 +1,59 @@
+package pages;
+
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.sql.Time;
+import java.util.Random;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
+
+public class SignUpPage extends BasePage{
+    private By firstName = By.id("user_first_name");
+    private By lastName = By.id("user_last_name");
+    private By email = By.id("user_email");
+    private By password = By.id("user_password");
+    private By submit = By.cssSelector("input[name='commit']");
+    private By activationBanner = By.cssSelector("a[data-success-message]");
+
+
+
+
+
+
+    private static final Logger log = getLogger(SignUpPage.class.getName());
+
+    public SignUpPage(WebDriver driver){
+        super(driver);
+    }
+
+    public void signUpForm(){
+        log.info("Fill SignUp Form");
+        driver.findElement(firstName).sendKeys("Kilian");
+        driver.findElement(lastName).sendKeys("Jornet");
+        driver.findElement(email).sendKeys("Kilian.Jornet@live.com");
+        driver.findElement(password).sendKeys("Everest123.!");
+
+        WebDriverWait wait = new WebDriverWait(driver, 3);
+        driver.findElement(submit).click();
+
+        log.info("Checking the Activation Header");
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(activationBanner));
+
+    }
+
+    public By getBannerText(){
+        return activationBanner;
+    }
+
+
+
+
+
+}
