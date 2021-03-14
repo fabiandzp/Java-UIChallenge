@@ -1,13 +1,12 @@
 package pages;
 
+import io.cucumber.java.eo.Se;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -16,8 +15,8 @@ public class ResultsPage extends BasePage{
     private final By minValuePrice = By.cssSelector("input[placeholder='Min']");
     private final By maxValuePrice = By.cssSelector("input[placeholder='Max']");
     private final By searchFilter = By.cssSelector("button[class='search-input-group__button']");
-    private final By resulList = By.xpath("//li[contains(@class,'sortable-tile sortable-tile--4up-order')]");
-
+    private final By resultList = By.xpath("//li[contains(@class,'sortable-tile sortable-tile--4up-order')]");
+    private final By dropDown = By.id("sort");
 
     private static final Logger log = getLogger(LandingPage.class.getName());
 
@@ -39,13 +38,21 @@ public class ResultsPage extends BasePage{
         //wait.until(ExpectedConditions.elementToBeClickable(searchFilter));
         driver.findElements(searchFilter).get(1).click();
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(resulList));
+        wait.until(ExpectedConditions.presenceOfElementLocated(resultList));
 
-        return resulList;
+        return resultList;
     }
 
 
     public By orderPriceHighToLow() {
+        WebDriverWait wait =new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.presenceOfElementLocated(dropDown));
 
+        Select orderCriteria = new Select(driver.findElement(dropDown));
+        orderCriteria.selectByValue("price|desc");
+
+        //wait.until(ExpectedConditions.presenceOfElementLocated(resultList));
+
+        return resultList;
     }
 }
