@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
-public class Categories extends BasePage{
+public class Categories extends BasePage {
     private final By categoryDrums = By.cssSelector("button[data-header-category='drums']");
 
     private static final Logger log = getLogger(LandingPage.class.getName());

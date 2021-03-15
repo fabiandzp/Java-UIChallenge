@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
-public class LoginPopUp extends BasePage{
+public class LoginPopUp extends BasePage {
 
     public LoginPopUp (WebDriver driver){
         super(driver);
@@ -66,7 +66,8 @@ public class LoginPopUp extends BasePage{
         return accountNameHolder;
     }
 
-    public void loginFailed(){
+    private final By filedLoginMessage = By.className("alert-box--red");
+    public String loginFailed(){
         // Store the current window handle
         String winHandleBefore = driver.getWindowHandle();
 
@@ -86,8 +87,10 @@ public class LoginPopUp extends BasePage{
         driver.findElement(passwordLogin).sendKeys("wrongPasswrod.!");
         driver.findElement(btnLogin).click();
 
-        driver.switchTo().window(winHandleBefore);
+        String invalidLoginMessage = driver.findElement(filedLoginMessage).getText();
 
+        driver.switchTo().window(winHandleBefore);
+        return invalidLoginMessage;
     }
 
 }

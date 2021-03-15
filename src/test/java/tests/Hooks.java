@@ -1,3 +1,5 @@
+package tests;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
@@ -20,5 +22,7 @@ public class Hooks {
     public void tearDown(){
         driver.quit();
     }
+
+
 
 }

@@ -1,3 +1,4 @@
+package tests;
 
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
@@ -9,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-public class Runner extends Hooks{
+public class Runner extends Hooks {
 
     private static final Logger log = getLogger(Runner.class.getName());
 
@@ -51,20 +52,31 @@ public class Runner extends Hooks{
         LoginPopUp loginPopUp = new LoginPopUp(driver);
 
         log.info("Calling login fancy box");
-        loginPopUp.loginFailed();
+        String invalidLoginMessage = loginPopUp.loginFailed();
+
+        assertThat("Login validation fail", invalidLoginMessage,
+                equalTo("The password or email you entered is incorrect."));
+
         driver.close();
-        //Pendiente Validacion
     }
 
     @Test
     public void searchItem(){
+        //Launchwen and Query
         LandingPage landing = new LandingPage(driver);
-
         log.info("Search Item");
-        landing.search("Fender Stratocaster");
+        String query = "Fender Stratocaster";
+        landing.search(query);
 
-        //assertThat("Element contains 'Fender Stratocaster'", ,
-          //      containsString("Fender Stratocaster"));
+        //Getting the resultList
+        ResultsPage resultsPage = new ResultsPage(driver);
+        By itemsList = resultsPage.resultsList();
+
+        //Iteration of the list to match at least one of the elements
+        String itemFromList = resultsPage.searchItemInResultList(itemsList, query);
+        log.info(itemFromList);
+        assertThat("The Item retrieved doesn't contains '"+query+"'", itemFromList, containsString(query));
+
         driver.close();
     }
 
@@ -81,24 +93,10 @@ public class Runner extends Hooks{
         String maxVal = "1200";
         By resultList = resultsPage.priceFilter(minVal, maxVal);
 
-        /*int Numberelement = driver.findElements(resultList).size();
-        int counter=0;
-        for (int i=0; i < Numberelement; i++) {
-            log.info("Text: " + driver.findElements(resultList).get(i).getText());
-            String strValidation = driver.findElements(resultList).get(i).getText();
-            if (strValidation.contains("Gibson Les Paul")){
-                counter = counter + i;
-                break;
-            }
-
-        }
-        log.info("counter es: " + counter);
-
-        String validationItem  = driver.findElements(resultList).get(counter).getText();
-        log.info("Item Text contains: " + validationItem);
-        log.info("Validation - Items contains 'Gibson Les Paul' ->" + validationItem.contains("Gibson Les Paul"));*/
-
-        //Pendiente Asserion
+        //Iteration of the list to match at least one of the elements
+        String itemFromList = resultsPage.searchItemInResultList(resultList, query);
+        log.info(itemFromList);
+        assertThat("The Item retrieved doesn't contains '"+query+"'", itemFromList, containsString(query));
 
         driver.close();
     }
@@ -107,34 +105,19 @@ public class Runner extends Hooks{
     @Test
     public void searchAndOrderPriceHighToLow(){
         LandingPage landingPage = new LandingPage(driver);
-        String query = "Condenser Microphones";
+        String query = "Condenser Microphone";
 
         log.info("Calling search method");
         landingPage.search(query);
 
         ResultsPage resultsPage = new ResultsPage(driver);
         By resultList = resultsPage.orderPriceHighToLow();
-/*
 
-        int Numberelement = driver.findElements(resultList).size();
-        int counter=0;
-        for (int i=0; i < Numberelement; i++) {
-            log.info("Text: " + driver.findElements(resultList).get(i).getText());
-            String strValidation = driver.findElements(resultList).get(i).getText();
-            if (strValidation.contains("Condenser Microphone")){
-                counter = counter + i;
-                break;
-            }
+        //Iteration of the list to match at least one of the elements
+        String itemFromList = resultsPage.searchItemInResultList(resultList, query);
+        log.info(itemFromList);
+        assertThat("The Item retrieved doesn't contains '"+query+"'", itemFromList, containsString(query));
 
-        }
-        log.info("counter es: " + counter);
-
-        String validationItem  = driver.findElements(resultList).get(counter).getText();
-        log.info("Item Text contains: " + validationItem);
-        log.info("Validation - Items contains 'Condenser Microphone' ->" + validationItem.contains("Condenser Microphone"));
-*/
-
-        //Pendiente Asserion
         driver.close();
     }
 
