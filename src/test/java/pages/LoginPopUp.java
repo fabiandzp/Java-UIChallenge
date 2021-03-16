@@ -8,9 +8,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 import static org.apache.logging.log4j.LogManager.getLogger;
 
 public class LoginPopUp extends BasePage {
+
+    private static Properties props;
 
     public LoginPopUp (WebDriver driver){
         super(driver);
@@ -39,9 +45,18 @@ public class LoginPopUp extends BasePage {
         WebDriverWait wait = new WebDriverWait(driver, 3);
         wait.until(ExpectedConditions.presenceOfElementLocated(popup));
 
+        props = new Properties();
+        try {
+            props.load(new FileInputStream("application.properties"));
+        } catch (IOException var2) {
+            System.out.println("Error when reading the property file");
+        }
+
         log.info("Login Form");
-        driver.findElement(usernameLogin).sendKeys("kilianjornet86@gmail.com");
-        driver.findElement(passwordLogin).sendKeys("Everest123.!");
+        String username = props.getProperty("username");
+        String password = props.getProperty("password");
+        driver.findElement(usernameLogin).sendKeys(username);
+        driver.findElement(passwordLogin).sendKeys(password);
         driver.findElement(btnLogin).click();
 
         driver.switchTo().window(winHandleBefore);
@@ -82,11 +97,18 @@ public class LoginPopUp extends BasePage {
         WebDriverWait wait = new WebDriverWait(driver, 3);
         wait.until(ExpectedConditions.presenceOfElementLocated(popup));
 
+        props = new Properties();
+        try {
+            props.load(new FileInputStream("application.properties"));
+        } catch (IOException var2) {
+            System.out.println("Error when reading the property file");
+        }
         log.info("Login Form");
-        driver.findElement(usernameLogin).sendKeys("kilianjornet86@gmail.com");
-        driver.findElement(passwordLogin).sendKeys("wrongPasswrod.!");
+        String username = props.getProperty("username");
+        String password = props.getProperty("password");
+        driver.findElement(usernameLogin).sendKeys(username);
+        driver.findElement(passwordLogin).sendKeys(password+"1");
         driver.findElement(btnLogin).click();
-
         String invalidLoginMessage = driver.findElement(filedLoginMessage).getText();
 
         driver.switchTo().window(winHandleBefore);
