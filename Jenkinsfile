@@ -1,13 +1,19 @@
-node {
-	stage ('SCM checkout'){
-		git "https://github.com/fabiandzp/UIChallenge"
-		}
-	stage ('Build'){
-    	dir("comtest") {
-	   sh "mvn clean install"
-       }
-       	dir("comtest/target") {
-	   sh "java -jar com.test-1.0-SNAPSHOT.jar"
-       }
-		}
+pipeline {
+    agent any
+
+    tools {
+
+        maven 'Maven 3.6.3'
+    }
+
+    stages {
+        stage('Test'){
+                // To run Maven on a Windows agent, use
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    bat "mvn clean verify"
+                }
+            }
+        }
+	}
 }
